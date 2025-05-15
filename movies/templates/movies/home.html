@@ -1,0 +1,17 @@
+{% extends 'movies/base.html' %}
+{% load static %}
+
+{% block title %}Home - Movie Recommendation{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Welcome to Movie Recommender 🎬</h1>
+    {% if user.is_authenticated %}
+      <p>Hello, {{ user.username }}!</p>
+      <a href="{% url 'rate_movies' %}" class="button">Rate Movies</a> |
+      <a href="{% url 'recommendations' %}" class="button">View Recommendations</a>
+    {% else %}
+      <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.</p>
+    {% endif %}
+  </div>
+{% endblock %}

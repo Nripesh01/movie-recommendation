@@ -1,0 +1,31 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Your Recommendations{% endblock %}
+
+{% block content %}
+<h1>Recommended Movies</h1>
+
+{% if message %}
+  <p>{{ message }}</p>
+{% elif recommendations %}
+  <ul style="list-style: none; padding: 0;">
+    {% for movie in recommendations %}
+      <li style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+        <div style="display: flex; align-items: center;">
+          {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" width="100" height="150" style="margin-right: 15px; object-fit: cover;">
+          {% endif %}
+          <div>
+            <h3 style="margin: 0;">{{ movie.title }}</h3>
+            <p style="margin: 5px 0;"><strong>Genre:</strong> {{ movie.genre }}</p>
+            <p style="margin: 5px 0;"><strong>Year:</strong> {{ movie.year }}</p>
+            <p style="margin: 5px 0;">{{ movie.description|truncatechars:200 }}</p>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No recommendations available.</p>
+{% endif %}
+{% endblock %}
