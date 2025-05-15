@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: movie-recommender
+    name: movie-recommendation
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn movie_project.wsgi:application"
@@ -8,8 +8,4 @@ services:
       - key: DJANGO_SETTINGS_MODULE
         value: movie_project.settings
       - key: PYTHON_VERSION
-        value: 3.10
-      - key: SECRET_KEY
-        value: your_secret_key_here
-      - key: DEBUG
-        value: False
+        value: 3.11
