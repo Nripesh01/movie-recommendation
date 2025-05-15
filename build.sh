@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-# install dependencies
+# Exit on error
+set -o errexit
+
 pip install -r requirements.txt
-
-# collect static files
 python manage.py collectstatic --noinput
-
-# apply migrations
 python manage.py migrate
