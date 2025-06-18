@@ -13,9 +13,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from .form import RegisterForm  
 from django.template.defaulttags import register
 
-
-
-def recommendations_view(request):
+# jwfeffsdksdjlsdf
+def    recommendations_view(request):
 
     user = request.user
 
