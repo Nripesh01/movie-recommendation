@@ -12,12 +12,18 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from .form import RegisterForm  
 from django.template.defaulttags import register
+<<<<<<< HEAD
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Avg
 
 
 def recommendations_view(request):
+=======
+
+# jwfeffsdksdjlsdf
+def    recommendations_view(request):
+>>>>>>> 6920212d36f4461bc690c8205e2ca0581df5407c
 
     user = request.user
 
