@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
 </head>
 <body>
-  <nav>
-    <ul>
+  <nav style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #f8f9fa; border-bottom: 1px solid #ccc;">
+    <ul style="list-style: none; display: flex; gap: 15px; margin: 0; padding: 0;">
       {% if user.is_authenticated %}
         <li><a href="{% url 'rate_movies' %}">Rate Movies</a></li>
         <li><a href="{% url 'recommendations' %}">Recommendations</a></li>
@@ -19,9 +19,14 @@
         <li><a href="{% url 'register' %}">Register</a></li>
       {% endif %}
     </ul>
+
+    <form method="get" action="{% url 'search_movies' %}" style="display: flex; align-items: center;">
+      <input type="text" name="q" placeholder="Search movies..." required style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; margin-right: 5px;">
+      <button type="submit" style="padding: 6px 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Search</button>
+    </form>
   </nav>
 
-  <div class="container">
+  <div class="container" style="padding: 20px;">
     {% if messages %}
       <ul class="messages">
         {% for message in messages %}
@@ -33,9 +38,5 @@
     {% block content %}
     {% endblock %}
   </div>
-
-  <form method="post" style="display:none;">
-    {% csrf_token %}
-  </form>
 </body>
 </html>

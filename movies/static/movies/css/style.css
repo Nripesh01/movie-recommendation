@@ -1,3 +1,4 @@
+/* === Global === */
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
@@ -5,8 +6,17 @@ body {
   padding: 0;
 }
 
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+/* === Navigation === */
 nav {
-  background-color: #2c3e50;
+  background-color: #192c3f;
   padding: 10px;
 }
 
@@ -25,14 +35,7 @@ nav ul li a {
   font-weight: bold;
 }
 
-.container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-}
-
+/* === Login & Register Forms === */
 .login-container,
 .register-container {
   max-width: 400px;
@@ -58,4 +61,81 @@ button {
 
 button:hover {
   background-color: #2980b9;
+}
+
+/* === Filter & Search Form === */
+form.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+form.filter-form input,
+form.filter-form select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form.filter-form input[type="number"] {
+  width: 100px;
+}
+
+form.filter-form input[type="text"] {
+  width: 150px;
+}
+
+/* === Movie List (Search Results / Recommendations) === */
+.movie-list {
+  list-style: none;
+  padding: 0;
+}
+
+.movie-list li {
+  background-color: #ecf0f1;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.movie-list li:hover {
+  background-color: #dfe6e9;
+}
+
+.movie-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+  text-decoration: none;
+}
+
+.movie-title:hover {
+  text-decoration: underline;
+  color: #2980b9;
+}
+
+.movie-desc {
+  margin-top: 5px;
+  color: #555;
+}
+
+/* === Optional Flash Messages === */
+.message {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.message.success {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.message.error {
+  background-color: #e74c3c;
+  color: white;
 }

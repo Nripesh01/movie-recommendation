@@ -7,12 +7,14 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from django.contrib.auth.models import User
 import pandas as pd
-from .models import Rating, Movie
+from movies.models import Rating, Movie
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from .form import RegisterForm  
 from django.template.defaulttags import register
-
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q, Avg
 
 
 def recommendations_view(request):
@@ -100,15 +102,14 @@ def login_view(request):
 # Register View
 def register_view(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
+            user = form.save()
+            login(request, user)
             messages.success(request, 'Registration successful! You can now log in.')
             return redirect('login')  # Redirect to login page after registration
     else:
-        form = RegisterForm()
+        form = UserCreationForm()
 
     return render(request, 'movies/register.html', {'form': form})
 
@@ -148,3 +149,60 @@ def get_item(dictionary, key):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def search_results_view(request):
+    query = request.GET.get('q', '')
+    results = Movie.objects.filter(title__icontains=query) if query else []
+    return render(request, 'movies/search_results.html', {'results': results, 'query': query})
+
+def movie_detail_view(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+
+    if request.method == "POST":
+        user_rating = request.POST.get("rating")
+        if user_rating:
+            # Save or update rating
+            Rating.objects.update_or_create(
+                user=request.user,
+                movie=movie,
+                defaults={'rating': user_rating}
+            )
+            return redirect('movie_detail', movie_id=movie_id)
+
+    # Fetch existing rating (if any)
+    user_rating = None
+    if request.user.is_authenticated:
+        try:
+            user_rating = Rating.objects.get(user=request.user, movie=movie)
+        except Rating.DoesNotExist:
+            user_rating = None
+
+    context = {
+        'movie': movie,
+        'user_rating': user_rating,
+    }
+    return render(request, 'movies/movie_detail.html', context)
+
+def filter_movies_view(request):
+    genre = request.GET.get('genre')
+    year = request.GET.get('year')
+    min_rating = request.GET.get('min_rating')
+    query = request.GET.get('q')
+
+    movies = Movie.objects.all()
+
+    if genre and genre != 'All':
+        movies = movies.filter(genre__icontains=genre)
+    
+    if year:
+        movies = movies.filter(release_year=year)
+
+    if min_rating:
+        movies = movies.annotate(avg_rating=Avg('rating__rating')).filter(avg_rating__gte=min_rating)
+    
+    if query:
+        movies = movies.filter(title__icontains=query)
+
+    return render(request, 'filter_movies.html', {
+        'movies': movies,
+    })

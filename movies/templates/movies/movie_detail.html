@@ -1,0 +1,36 @@
+{% extends 'movies/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ movie.title }}</h2>
+    <p><strong>Description:</strong> {{ movie.description }}</p>
+    <p><strong>Genre:</strong> {{ movie.genre }}</p>
+    <p><strong>Year:</strong> {{ movie.release_year }}</p>
+
+    {% if movie.poster_url %}
+        <img src="{{ movie.poster_url }}" alt="{{ movie.title }} Poster" class="img-fluid" style="max-width: 200px;">
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <hr>
+        <h3>Rate this movie:</h3>
+        <form method="post">
+            {% csrf_token %}
+            <select name="rating" class="form-select w-auto d-inline">
+                {% for i in "12345" %}
+                    <option value="{{ i }}" {% if user_rating and user_rating.rating == i|add:""|int %}selected{% endif %}>
+                        {{ i }} Star{{ i|add:""|int > 1|yesno:",s" }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">Submit Rating</button>
+        </form>
+
+        {% if user_rating %}
+            <p class="mt-2">Your rating: <strong>{{ user_rating.rating }}</strong> ⭐</p>
+        {% endif %}
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to rate this movie.</p>
+    {% endif %}
+</div>
+{% endblock %}

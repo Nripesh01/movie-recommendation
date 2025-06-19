@@ -1,0 +1,30 @@
+<!-- templates/filter_movies.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Filter and Search Movies</h2>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Search title" value="{{ request.GET.q }}">
+    <select name="genre">
+        <option value="All">All Genres</option>
+        <option value="Action">Action</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Drama">Drama</option>
+        <!-- Add more genres -->
+    </select>
+    <input type="number" name="year" placeholder="Year" value="{{ request.GET.year }}">
+    <input type="number" step="0.1" name="min_rating" placeholder="Min Rating" value="{{ request.GET.min_rating }}">
+    <button type="submit">Filter</button>
+</form>
+
+<ul>
+    {% for movie in movies %}
+        <li>
+            <h3>{{ movie.title }}</h3>
+            <p>Genre: {{ movie.genre }} | Year: {{ movie.release_year }}</p>
+        </li>
+    {% empty %}
+        <li>No movies found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

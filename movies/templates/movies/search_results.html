@@ -1,0 +1,22 @@
+{% extends 'movies/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Search Results for "{{ query }}"</h2>
+
+    {% if results %}
+        <ul class="list-group">
+            {% for movie in results %}
+                <li class="list-group-item">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        {{ movie.title }} ({{ movie.release_year }})
+                    </a>
+                    <p>{{ movie.description|truncatewords:20 }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No movies found for "{{ query }}".</p>
+    {% endif %}
+</div>
+{% endblock %}
