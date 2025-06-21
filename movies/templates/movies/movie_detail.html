@@ -17,12 +17,13 @@
         <form method="post">
             {% csrf_token %}
             <select name="rating" class="form-select w-auto d-inline">
-                {% for i in "12345" %}
-                    <option value="{{ i }}" {% if user_rating and user_rating.rating == i|add:""|int %}selected{% endif %}>
-                        {{ i }} Star{{ i|add:""|int > 1|yesno:",s" }}
-                    </option>
-                {% endfor %}
-            </select>
+           {% for i in "12345" %}
+         <option value="{{ i }}" {% if user_rating and user_rating.rating|stringformat:"s" == i %}selected{% endif %}>
+            {{ i }} Star{% if i != "1" %}s{% endif %}
+          </option>
+         {% endfor %}
+       </select>
+
             <button type="submit" class="btn btn-primary">Submit Rating</button>
         </form>
 

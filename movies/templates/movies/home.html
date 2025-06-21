@@ -4,14 +4,18 @@
 {% block title %}Home - Movie Recommendation{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h1>Welcome to Movie Recommender 🎬</h1>
+<div class="hero-section">
+  <div class="hero-overlay">
+    <h1 class="welcome-title">Welcome to Movie Recommender 🎬</h1>
     {% if user.is_authenticated %}
-      <p>Hello, {{ user.username }}!</p>
-      <a href="{% url 'rate_movies' %}" class="button">Rate Movies</a> |
-      <a href="{% url 'recommendations' %}" class="button">View Recommendations</a>
+      <p class="welcome-user">Hello, {{ user.username }}!</p>
+      <div class="hero-buttons">
+        <a href="{% url 'rate_movies' %}" class="btn-main">🎯 Rate Movies</a>
+        <a href="{% url 'recommendations' %}" class="btn-main">✨ View Recommendations</a>
+      </div>
     {% else %}
-      <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.</p>
+      <p class="welcome-text">Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to start your personalized movie journey!</p>
     {% endif %}
   </div>
+</div>
 {% endblock %}

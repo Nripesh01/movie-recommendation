@@ -1,6 +1,9 @@
 import os
 import dj_database_url
 from pathlib import Path
+from decouple import config
+
+TMDB_API_KEY = config('TMDB_API_KEY')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -82,6 +85,12 @@ USE_TZ = True
 
 # Static files (CSS, JS, Images)
 STATIC_URL = '/static/'
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'movies' / 'static',
+]
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

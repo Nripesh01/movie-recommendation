@@ -9,9 +9,9 @@
             {% for movie in results %}
                 <li class="list-group-item">
                     <a href="{% url 'movie_detail' movie.id %}">
-                        {{ movie.title }} ({{ movie.release_year }})
+                        {{ movie.title }} ({{ movie.release_date|default_if_none:"N/A"|slice:":4" }})
                     </a>
-                    <p>{{ movie.description|truncatewords:20 }}</p>
+                    <p>{{ movie.overview|truncatewords:20 }}</p>
                 </li>
             {% endfor %}
         </ul>

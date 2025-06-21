@@ -19,7 +19,7 @@ class Rating(models.Model):
     rating = models.PositiveSmallIntegerField()
 
     class Meta:
-        unique_together = ('user', 'movie')  # prevent duplicate ratings
+        unique_together = ('user', 'movie')
 
     def __str__(self):
        return f"{self.user.username} - {self.movie.title} - {self.rating}"

@@ -10,20 +10,16 @@ import pandas as pd
 from movies.models import Rating, Movie
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from .form import RegisterForm  
+from movies.form import RegisterForm  
 from django.template.defaulttags import register
-<<<<<<< HEAD
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Avg
+from movies.tmdb_api import search_movies, get_movie_details
+from movies.utils import get_movie_details
 
 
 def recommendations_view(request):
-=======
-
-# jwfeffsdksdjlsdf
-def    recommendations_view(request):
->>>>>>> 6920212d36f4461bc690c8205e2ca0581df5407c
 
     user = request.user
 
@@ -158,33 +154,54 @@ def logout_view(request):
 
 def search_results_view(request):
     query = request.GET.get('q', '')
-    results = Movie.objects.filter(title__icontains=query) if query else []
+    results = []
+    if query:
+        results = search_movies(query)  # returns list of dicts from TMDb API
     return render(request, 'movies/search_results.html', {'results': results, 'query': query})
 
+
+
 def movie_detail_view(request, movie_id):
-    movie = get_object_or_404(Movie, pk=movie_id)
+    # First try to fetch the movie from the local database
+    movie_instance = Movie.objects.filter(id=movie_id).first()
 
-    if request.method == "POST":
-        user_rating = request.POST.get("rating")
-        if user_rating:
-            # Save or update rating
-            Rating.objects.update_or_create(
-                user=request.user,
-                movie=movie,
-                defaults={'rating': user_rating}
-            )
-            return redirect('movie_detail', movie_id=movie_id)
+    # If not found locally, fetch from TMDB API
+    if not movie_instance:
+        movie_data = get_movie_details(movie_id)
+        if not movie_data:
+            return render(request, 'movies/movie_not_found.html')
+     
+        genres = movie_data.get('genres', [])
+        genre_names = ', '.join([genre['name'] for genre in genres]) if genres else ''
 
-    # Fetch existing rating (if any)
+        # Save to DB so it can be used as ForeignKey
+        movie_instance = Movie.objects.create(
+            id=movie_id,
+            title=movie_data['title'],
+            genre=genre_names,
+            year=movie_data.get('release_date', '')[:4] if movie_data.get('release_date') else None,
+            description=movie_data.get('overview', ''),
+            poster_url=f"https://image.tmdb.org/t/p/w500{movie_data.get('poster_path')}" if movie_data.get('poster_path') else '',
+            release_year=int(movie_data.get('release_date')[:4]) if movie_data.get('release_date') else None
+        )
+
+    # Handle rating retrieval and submission
     user_rating = None
     if request.user.is_authenticated:
-        try:
-            user_rating = Rating.objects.get(user=request.user, movie=movie)
-        except Rating.DoesNotExist:
-            user_rating = None
+        user_rating = Rating.objects.filter(user=request.user, movie=movie_instance).first()
+
+        if request.method == "POST":
+            rating_val = request.POST.get("rating")
+            if rating_val:
+                Rating.objects.update_or_create(
+                    user=request.user,
+                    movie=movie_instance,
+                    defaults={'rating': rating_val}
+                )
+                return redirect('movie_detail', movie_id=movie_id)
 
     context = {
-        'movie': movie,
+        'movie': movie_instance,
         'user_rating': user_rating,
     }
     return render(request, 'movies/movie_detail.html', context)

@@ -1,0 +1,8 @@
+{% extends "movies/base.html" %}
+
+{% block content %}
+  <div class="alert alert-danger">
+    Movie not found or not available in the database or TMDB API.
+  </div>
+  <a href="{% url 'home' %}" class="btn btn-secondary">← Back to Home</a>
+{% endblock %}
