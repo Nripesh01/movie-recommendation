@@ -10,7 +10,6 @@ import pandas as pd
 from movies.models import Rating, Movie
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from movies.form import RegisterForm  
 from django.template.defaulttags import register
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -99,7 +98,6 @@ def login_view(request):
         form = AuthenticationForm()
 
     return render(request, 'movies/login.html', {'form': form})
-
 
 # Register View
 def register_view(request):

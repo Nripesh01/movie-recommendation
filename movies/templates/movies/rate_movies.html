@@ -1,21 +1,25 @@
 {% extends 'movies/base.html' %}
 {% load static %}
 {% load custom_filters %}
+
+{% block title %}Rate Movies{% endblock %}
+
 {% block content %}
+<div class="login-hero">
+  <div class="login-container glass-effect">
+    <h2 class="login-heading">Rate Movies</h2>
 
-<h2>Rate Movies</h2>
-
-<form method="POST">
-    {% csrf_token %} 
-    {% for movie in movies %}
-        <div>
-            <label>{{ movie.title }}</label>
-            <input type="number" name="rating_{{ movie.id }}" min="1" max="5"
-                   value="{{ user_ratings|get_item:movie.id|default:'' }}">
+    <form method="POST">
+      {% csrf_token %}
+      {% for movie in movies %}
+        <div class="form-group">
+          <label>{{ movie.title }}</label>
+          <input type="number" name="rating_{{ movie.id }}" min="1" max="5"
+                 value="{{ user_ratings|get_item:movie.id|default:'' }}" class="form-control">
         </div>
-    {% endfor %}
-    <button type="submit">Submit Ratings</button>
-</form>
-
+      {% endfor %}
+      <button type="submit" class="login-button">Submit Ratings</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
-

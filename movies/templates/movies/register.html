@@ -4,14 +4,15 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
+<div class="login-hero">
 <div class="register-container">
-  <h2>Create an Account</h2>
-  <form method="post">
+  <h2>Create Your Account</h2>
+  <form method="post" class="register-form">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Register</button>
+    <button type="submit" class="btn-submit">Register</button>
   </form>
-  <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+  <p class="register-link">Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
 
   {% if form.errors %}
     <ul class="errorlist">
@@ -25,6 +26,7 @@
       {% endfor %}
     </ul>
   {% endif %}
+  </div>
 </div>
 {% endblock %}
 
