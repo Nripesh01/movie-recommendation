@@ -1,13 +1,11 @@
 {% extends 'movies/base.html' %}
 {% load static %}
-
-{% block title %}Home - Movie Recommendation{% endblock %}
-
 {% block content %}
 <!-- Hero Section with background image applied via CSS -->
 <div class="hero-section">
   <div class="hero-overlay">
-    <h1 class="welcome-title">Welcome to Movie Recommender 🎬</h1>
+    <h1 class="welcome-title">Unlimited movies 🎬</h1>
+
     {% if user.is_authenticated %}
       <p class="welcome-user">Hello, {{ user.username }}!</p>
       <div class="hero-buttons">
@@ -15,8 +13,18 @@
         <a href="{% url 'recommendations' %}" class="btn-main">✨ View Recommendations</a>
       </div>
     {% else %}
-      <p class="welcome-text">Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to start your personalized movie journey!</p>
+      <p class="welcome-text">
+        Please <a href="{% url 'login' %}">login</a> or 
+        <a href="{% url 'register' %}">register</a> to start your personalized movie journey!
+      </p>
     {% endif %}
+
+    <!-- 🔍 Search Bar Below Welcome Text -->
+    <form method="get" action="{% url 'search_results' %}" class="search-form">
+      <input type="text" name="q" placeholder="Search movies..." class="search-input">
+      <button type="submit" class="search-button">🔍 Search</button>
+    </form>
+
   </div>
 </div>
 {% endblock %}

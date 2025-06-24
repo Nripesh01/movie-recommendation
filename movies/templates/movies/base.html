@@ -17,11 +17,11 @@
     <div class="container-fluid">
       <a class="navbar-brand fw-bold" href="/">🎬 Movie App</a>
 
-      <!-- Search Form -->
-      <form class="d-flex ms-auto me-3" method="get" action="{% url 'search_movies' %}">
+      {% comment %} <!-- Search Form -->
+      <form class="d-flex ms-auto me-3" method="get" action="{% url 'search_results' %}">
         <input class="form-control me-2" type="search" name="q" placeholder="Search movies..." required>
         <button class="btn btn-primary" type="submit">Search</button>
-      </form>
+      </form> {% endcomment %}
 
       <!-- Auth Links -->
       <div>

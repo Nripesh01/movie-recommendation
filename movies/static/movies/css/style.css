@@ -28,7 +28,8 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 40px;
+  padding: 1px 40px 80px 40px;
+  color: #fff
 }
 
 .welcome-title {
@@ -101,6 +102,43 @@ nav ul li a:hover {
 
 
 /* === Login & Register Forms === */
+
+/* For the main title */
+.welcome-title {
+    color: #ffcc00; /* Bright yellow */
+    font-size: 60px;
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* For the "Please login or register" text */
+.welcome-text {
+    color: #ffffff; /* White */
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* For the "Hello, username" text (if user is logged in) */
+.welcome-user {
+    color: #00ffcc; /* Aqua */
+    font-size: 22px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Optional: style the login/register links */
+.welcome-text a {
+    color: #00bfff; /* Sky blue */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.welcome-text a:hover {
+    text-decoration: underline;
+}
+
+
 .login-container,
 .register-container {
   max-width: 400px;
@@ -371,4 +409,35 @@ form.filter-form input[type="text"] {
 
 .errorlist li {
   margin-bottom: 0.3rem;
+}
+
+/* Center and style the search bar */
+.search-form {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.search-input {
+  padding: 10px 15px;
+  width: 300px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #e60000;
 }

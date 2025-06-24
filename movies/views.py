@@ -152,10 +152,15 @@ def logout_view(request):
 
 def search_results_view(request):
     query = request.GET.get('q', '')
-    results = []
+    local_results = []
+    tmdb_results = []
     if query:
-        results = search_movies(query)  # returns list of dicts from TMDb API
-    return render(request, 'movies/search_results.html', {'results': results, 'query': query})
+        local_results = Movie.objects.filter(title__icontains=query)
+        tmdb_results = search_movies(query)  # returns list of dicts from TMDb API
+        
+        local_titles = set(m.title.lower() for m in local_results)
+        tmdb_results = [movie for movie in tmdb_results if movie['title'].lower() not in local_titles]
+    return render(request, 'movies/search_results.html', {'local_results': local_results, 'tmdb_results': tmdb_results, 'query': query})
 
 
 
