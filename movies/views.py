@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Avg
 from movies.tmdb_api import search_movies, get_movie_details
 from movies.utils import get_movie_details
+from django.core.paginator import Paginator
 
 
 def recommendations_view(request):
@@ -209,13 +210,14 @@ def movie_detail_view(request, movie_id):
     }
     return render(request, 'movies/movie_detail.html', context)
 
+
 def filter_movies_view(request):
     genre = request.GET.get('genre')
     year = request.GET.get('year')
     min_rating = request.GET.get('min_rating')
     query = request.GET.get('q')
 
-    movies = Movie.objects.all()
+    movies = Movie.objects.filter()
 
     if genre and genre != 'All':
         movies = movies.filter(genre__icontains=genre)
@@ -223,12 +225,30 @@ def filter_movies_view(request):
     if year:
         movies = movies.filter(release_year=year)
 
-    if min_rating:
-        movies = movies.annotate(avg_rating=Avg('rating__rating')).filter(avg_rating__gte=min_rating)
-    
     if query:
         movies = movies.filter(title__icontains=query)
 
-    return render(request, 'filter_movies.html', {
-        'movies': movies,
-    })
+    # ✅ Only annotate once — and do it before pagination
+    movies = movies.annotate(avg_rating=Avg('rating__rating'))
+
+    if min_rating:
+        try:
+            min_rating = float(min_rating)
+            movies = movies.filter(avg_rating__gte=min_rating)
+        except ValueError:
+            pass  # Ignore invalid rating input
+
+    # ✅ Pagination
+    paginator = Paginator(movies, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'q': query or '',
+        'genre': genre or 'All',
+        'year': year or '',
+        'min_rating': min_rating or '',
+    }
+
+    return render(request, 'filter_movies.html', context)

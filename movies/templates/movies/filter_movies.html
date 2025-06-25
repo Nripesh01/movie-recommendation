@@ -1,24 +1,27 @@
-<!-- templates/filter_movies.html -->
 {% extends 'movies/base.html' %}
 {% block content %}
 <h2>Filter and Search Movies</h2>
 
 <form method="get">
-    <input type="text" name="q" placeholder="Search title" value="{{ request.GET.q }}">
+    <input type="text" name="q" placeholder="Search title" value="{{ q }}">
     <select name="genre">
-        <option value="All">All Genres</option>
-        <option value="Action">Action</option>
-        <option value="Comedy">Comedy</option>
-        <option value="Drama">Drama</option>
-        <!-- Add more genres -->
+        <option value="All" {% if genre == 'All' %}selected{% endif %}>All Genres</option>
+        <option value="Action" {% if genre == 'Action' %}selected{% endif %}>Action</option>
+        <option value="Comedy" {% if genre == 'Comedy' %}selected{% endif %}>Comedy</option>
+        <option value="Drama" {% if genre == 'Drama' %}selected{% endif %}>Drama</option>
     </select>
-    <input type="number" name="year" placeholder="Year" value="{{ request.GET.year }}">
-    <input type="number" step="0.1" name="min_rating" placeholder="Min Rating" value="{{ request.GET.min_rating }}">
+    <input type="number" name="year" placeholder="Year" value="{{ year }}">
+    <input type="number" step="0.1" name="min_rating" placeholder="Min Rating" value="{{ min_rating }}">
     <button type="submit">Filter</button>
+    
 </form>
-
+<li>
+  <h3>{{ movie.title }}</h3>
+  <p>Genre: {{ movie.genre }} | Year: {{ movie.release_year }}</p>
+  <p><strong>Movie ID:</strong> {{ movie.id }}</p>
+</li>
 <ul>
-    {% for movie in movies %}
+{% for movie in page_obj %}
         <li>
             <h3>{{ movie.title }}</h3>
             <p>Genre: {{ movie.genre }} | Year: {{ movie.release_year }}</p>
@@ -27,4 +30,19 @@
         <li>No movies found.</li>
     {% endfor %}
 </ul>
+
+<!-- PAGINATION CONTROLS -->
+{% if page_obj.has_other_pages %}
+  <div style="margin-top: 20px;">
+    {% if page_obj.has_previous %}
+      <a href="?q={{ q }}&genre={{ genre }}&year={{ year }}&min_rating={{ min_rating }}&page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+      <a href="?q={{ q }}&genre={{ genre }}&year={{ year }}&min_rating={{ min_rating }}&page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+{% endif %}
 {% endblock %}
