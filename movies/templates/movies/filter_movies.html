@@ -1,9 +1,10 @@
 {% extends 'movies/base.html' %}
 {% block content %}
+
 <h2>Filter and Search Movies</h2>
 
 <form method="get">
-    <input type="text" name="q" placeholder="Search title" value="{{ q }}">
+    <input type="text" name="q" value="{{ q }}" placeholder="Search title">
     <select name="genre">
         <option value="All" {% if genre == 'All' %}selected{% endif %}>All Genres</option>
         <option value="Action" {% if genre == 'Action' %}selected{% endif %}>Action</option>
@@ -13,27 +14,22 @@
     <input type="number" name="year" placeholder="Year" value="{{ year }}">
     <input type="number" step="0.1" name="min_rating" placeholder="Min Rating" value="{{ min_rating }}">
     <button type="submit">Filter</button>
-    
 </form>
-<li>
-  <h3>{{ movie.title }}</h3>
-  <p>Genre: {{ movie.genre }} | Year: {{ movie.release_year }}</p>
-  <p><strong>Movie ID:</strong> {{ movie.id }}</p>
-</li>
+
 <ul>
-{% for movie in page_obj %}
-        <li>
-            <h3>{{ movie.title }}</h3>
-            <p>Genre: {{ movie.genre }} | Year: {{ movie.release_year }}</p>
-        </li>
-    {% empty %}
-        <li>No movies found.</li>
-    {% endfor %}
+  {% for movie in page_obj %}
+    <li>
+      <h3>{{ movie.title }}</h3>
+      <p>Genre: {{ movie.genre }} | Year: {{ movie.release_year }}</p>
+    </li>
+  {% empty %}
+    <li>No movies found.</li>
+  {% endfor %}
 </ul>
 
-<!-- PAGINATION CONTROLS -->
+<!-- PAGINATION -->
 {% if page_obj.has_other_pages %}
-  <div style="margin-top: 20px;">
+  <div>
     {% if page_obj.has_previous %}
       <a href="?q={{ q }}&genre={{ genre }}&year={{ year }}&min_rating={{ min_rating }}&page={{ page_obj.previous_page_number }}">Previous</a>
     {% endif %}
@@ -41,8 +37,9 @@
     <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
 
     {% if page_obj.has_next %}
-      <a href="?q={{ q }}&genre={{ genre }}&year={{ year }}&min_rating={{ min_rating }}&page={{ page_obj.next_page_number }}">Next</a>
+      <a href="?page={{ page_obj.next_page_number }}&q={{ q }}&genre={{ genre }}&year={{ year }}&min_rating={{ min_rating }}">Next</a>
     {% endif %}
   </div>
 {% endif %}
+
 {% endblock %}

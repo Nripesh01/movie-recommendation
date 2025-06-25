@@ -1,7 +1,8 @@
 import os
-import dj_database_url
 from pathlib import Path
 from decouple import config
+
+
 
 TMDB_API_KEY = config('TMDB_API_KEY')
 
@@ -12,10 +13,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')  # Render will o
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-import os
-
-import os
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 

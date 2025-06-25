@@ -1,19 +1,13 @@
 from django.shortcuts import render, redirect
-from .recommender import get_recommendations_for_user
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
-from django.contrib.auth.models import User
 import pandas as pd
 from movies.models import Rating, Movie
-import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from django.template.defaulttags import register
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Avg
 from movies.tmdb_api import search_movies, get_movie_details
 from movies.utils import get_movie_details
 from django.core.paginator import Paginator
@@ -217,7 +211,7 @@ def filter_movies_view(request):
     min_rating = request.GET.get('min_rating')
     query = request.GET.get('q')
 
-    movies = Movie.objects.filter()
+    movies = Movie.objects.all()
 
     if genre and genre != 'All':
         movies = movies.filter(genre__icontains=genre)
@@ -238,11 +232,16 @@ def filter_movies_view(request):
         except ValueError:
             pass  # Ignore invalid rating input
 
+
     # ✅ Pagination
     paginator = Paginator(movies, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
+    
+    print("Total movies:", movies.count())
+    print("Page:", page_obj.number)
+    print("Number of movies on this page:", len(page_obj))
+    
     context = {
         'page_obj': page_obj,
         'q': query or '',
@@ -252,3 +251,4 @@ def filter_movies_view(request):
     }
 
     return render(request, 'filter_movies.html', context)
+    
